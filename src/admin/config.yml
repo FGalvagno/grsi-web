@@ -41,6 +41,8 @@ collections:
       - { name: fecha, label: "Fecha", widget: datetime, required: true, date_format: "YYYY-MM-DD", time_format: false, picker_utc: true }
       - { name: tipo, label: "Tipo", widget: string, required: true, hint: "Por ejemplo: Defensa de tesis, Congreso, Visita, Equipamiento, Nota técnica" }
       - { name: resumen, label: "Resumen", widget: text, required: true }
+      - { name: imagen, label: "Imagen", widget: image, required: false, hint: "Apaisada. Hasta 500 KB." }
+      - { name: imagen_alt, label: "Descripción de la imagen", widget: string, required: false, hint: "Qué se ve en la imagen, para quien no puede verla." }
 
   - name: equipo
     label: "Equipo"
@@ -60,6 +62,7 @@ collections:
       - { name: lineas, label: "Líneas", widget: relation, collection: lineas, search_fields: [nombre], display_fields: [nombre], value_field: "{{slug}}", multiple: true, required: false, hint: "La primera es la principal." }
       - { name: correo, label: "Correo", widget: string, required: false }
       - { name: orcid, label: "ORCID", widget: string, required: false, hint: "Solo el número: 0000-0000-0000-0000" }
+      - { name: foto, label: "Foto", widget: image, required: false, hint: "Cuadrada o vertical, con la cara centrada. Hasta 500 KB." }
       - { name: orden, label: "Orden", widget: number, required: false, value_type: int, hint: "Opcional. Los números más bajos van primero." }
       - { name: body, label: "Reseña", widget: markdown, required: false }
 
@@ -102,6 +105,8 @@ collections:
       - { name: fin, label: "Año de finalización", widget: number, required: true, value_type: int }
       - { name: financiador, label: "Financiador", widget: string, required: false }
       - { name: codigo, label: "Código", widget: string, required: false }
+      - { name: imagen, label: "Imagen", widget: image, required: false, hint: "Apaisada. Hasta 500 KB." }
+      - { name: imagen_alt, label: "Descripción de la imagen", widget: string, required: false, hint: "Qué se ve en la imagen, para quien no puede verla." }
       - { name: director, label: "Dirección", widget: relation, collection: equipo, search_fields: [nombre], display_fields: [nombre], value_field: "{{slug}}", required: false }
       - { name: integrantes, label: "Integrantes", widget: relation, collection: equipo, search_fields: [nombre], display_fields: [nombre], value_field: "{{slug}}", multiple: true, required: false }
       - { name: lineas, label: "Líneas", widget: relation, collection: lineas, search_fields: [nombre], display_fields: [nombre], value_field: "{{slug}}", multiple: true, required: false }

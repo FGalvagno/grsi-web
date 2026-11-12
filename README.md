@@ -55,9 +55,9 @@ Cada carpeta de `contenido/` es una colección. Cada archivo `.md` es un element
 
 | Carpeta | Campos | Texto |
 | --- | --- | --- |
-| `equipo/` | `nombre`, `titulo`, `rol`, `categoria`, `lineas` (lista de líneas), `correo`, `orcid` | Reseña |
+| `equipo/` | `nombre`, `titulo`, `rol`, `categoria`, `lineas` (lista de líneas), `correo`, `orcid`, `foto` | Reseña |
 | `lineas/` | `nombre`, `sigla`, `resumen`, `responsable` (persona), `palabras_clave` (lista), `revisado` (fecha) | Texto ampliado |
-| `proyectos/` | `nombre`, `resumen`, `estado`, `tipo`, `inicio`, `fin` (años), `financiador`, `codigo`, `director` (persona), `integrantes` (personas), `lineas`, `socios` (lista) | Descripción ampliada |
+| `proyectos/` | `nombre`, `resumen`, `estado`, `tipo`, `inicio`, `fin` (años), `financiador`, `codigo`, `director` (persona), `integrantes` (personas), `lineas`, `socios` (lista), `imagen`, `imagen_alt` | Descripción ampliada |
 | `publicaciones/` | `titulo`, `autores` (lista de nombres), `anio`, `tipo`, `medio`, `doi`, `lineas`, `proyecto` | — |
 | `formados/` | `nombre`, `trabajo`, `nivel`, `anio`, `direccion` (persona), `hoy` | — |
 | `temas/` | `titulo`, `descripcion`, `tipo`, `dirige` (persona), `linea`, `alta` (fecha), `estado` | — |
@@ -67,7 +67,7 @@ Cada carpeta de `contenido/` es una colección. Cada archivo `.md` es un element
 | `capacitaciones/` | `nombre`, `descripcion`, `duracion`, `modalidad` | — |
 | `equipamiento/` | `nombre`, `descripcion`, `proveedor`, `linea` | — |
 | `casos/` | `nombre`, `socio`, `anio`, `descripcion`, `servicio` | — |
-| `noticias/` | `titulo`, `fecha`, `tipo`, `resumen` | — |
+| `noticias/` | `titulo`, `fecha`, `tipo`, `resumen`, `imagen`, `imagen_alt` | — |
 | `hitos/` | `titulo`, `anio`, `descripcion` | — |
 | `convenios/` | `nombre`, `socio`, `anio`, `tipo`, `pais` | — |
 
@@ -86,6 +86,7 @@ Reglas que aplica el sitio solo:
 - Orden: noticias por fecha (más nueva primero), publicaciones y formados por año, convocatorias por cierre. El resto, por nombre de archivo; para forzar un orden se puede agregar un campo numérico `orden`.
 - Las convocatorias con fecha de cierre pasada no se publican.
 - Las fechas van como `AAAA-MM-DD`.
+- Imágenes: se suben desde el administrador y quedan en `public/img/`. Sin foto, las personas muestran sus iniciales y los proyectos un recuadro. En los textos largos (reseña, texto de la línea, descripción del proyecto) también se pueden insertar imágenes desde el editor.
 - Hitos y convenios se mezclan por año en la línea de tiempo de "El grupo".
 
 ## Editar con Decap CMS
@@ -133,4 +134,3 @@ Hay que tocar tres lugares: el campo en `src/admin/config.yml`, su uso en la pla
 - Cambiar `url` en `contenido/sitio.yml` por la dirección definitiva.
 - Quitar la banda "Sitio modelo v3" (`src/_includes/cabecera.njk`), la vista `src/_includes/vistas/modelo.njk` y las notas de diseño (`<p class="nota">`).
 - Conectar el formulario de contacto a un servicio de envío (hoy es solo una maqueta).
-- Fotos de personas y proyectos: hoy se muestran iniciales y un recuadro.

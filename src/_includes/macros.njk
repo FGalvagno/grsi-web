@@ -10,9 +10,9 @@
 {% macro persona(p) %}{% if p %}<a href="#persona-{{ p.id }}">{{ p.nombre }}</a>{% endif %}{% endmacro %}
 {% macro linea(l) %}{% if l %}<a href="#linea-{{ l.id }}">{{ l.nombre }}</a>{% endif %}{% endmacro %}
 
-{% macro tarjetaPersona(p) %}<a class="card" href="#persona-{{ p.id }}"><div class="person"><div class="avatar" aria-hidden="true">{{ p.iniciales }}</div><div><h3>{{ p.nombreCompleto }}</h3><p class="meta">{{ p.rol }}</p><p class="meta">{% for l in p.lineas %}{{ l.nombre }}{% if not loop.last %} · {% endif %}{% endfor %}</p></div></div></a>{% endmacro %}
+{% macro tarjetaPersona(p) %}<a class="card" href="#persona-{{ p.id }}"><div class="person">{% if p.foto %}<img class="avatar" src="{{ p.foto }}" alt="" loading="lazy">{% else %}<div class="avatar" aria-hidden="true">{{ p.iniciales }}</div>{% endif %}<div><h3>{{ p.nombreCompleto }}</h3><p class="meta">{{ p.rol }}</p><p class="meta">{% for l in p.lineas %}{{ l.nombre }}{% if not loop.last %} · {% endif %}{% endfor %}</p></div></div></a>{% endmacro %}
 
-{% macro tarjetaProyecto(x) %}<a class="card" href="#proyecto-{{ x.id }}"><div class="thumb" aria-hidden="true">Foto · {{ x.nombre }}</div><div class="tags"><span class="pill {{ 'active' if x.enCurso else 'done' }}">{{ x.estado }}</span><span class="pill ">{{ x.tipo }}</span></div><h3>{{ x.nombre }}</h3><p class="meta">{{ x.resumen }}</p><div class="foot mono">{{ x.periodo }}{% if x.financiador %} · {{ x.financiador }}{% endif %}{% if x.director %} · Dir. {{ x.director.nombre }}{% endif %}</div></a>{% endmacro %}
+{% macro tarjetaProyecto(x) %}<a class="card" href="#proyecto-{{ x.id }}">{% if x.imagen %}<img class="thumb" src="{{ x.imagen }}" alt="{{ x.imagen_alt }}" loading="lazy">{% else %}<div class="thumb" aria-hidden="true">Foto · {{ x.nombre }}</div>{% endif %}<div class="tags"><span class="pill {{ 'active' if x.enCurso else 'done' }}">{{ x.estado }}</span><span class="pill ">{{ x.tipo }}</span></div><h3>{{ x.nombre }}</h3><p class="meta">{{ x.resumen }}</p><div class="foot mono">{{ x.periodo }}{% if x.financiador %} · {{ x.financiador }}{% endif %}{% if x.director %} · Dir. {{ x.director.nombre }}{% endif %}</div></a>{% endmacro %}
 
 {% macro filaPublicacion(b) %}<article class="row pub" data-anio="{{ b.anio }}" data-tipo="{{ b.tipo }}" data-lineas="{{ b.lineasIds }}" data-txt="{{ b.txt }}">
 <div class="when">{{ b.anio }}</div>
@@ -22,7 +22,7 @@
 
 {% macro filaTema(t) %}<article class="row tema" data-tipo="{{ t.tipo }}"><div class="when">Alta <time datetime="{{ t.alta }}">{{ t.altaTxt }}</time></div><div><h3>{{ t.titulo }}</h3><p class="sub">{{ t.descripcion }}</p><p class="sub sm">{{ t.tipo }}{% if t.dirige %} · Dirige {{ persona(t.dirige) }}{% endif %}{% if t.linea %} · {{ linea(t.linea) }}{% endif %}</p></div><div><span class="pill {{ 'ok' if t.disponible else 'done' }}">{{ t.estado }}</span></div></article>{% endmacro %}
 
-{% macro filaNoticia(n) %}<article class="row"><div class="when"><time datetime="{{ n.fecha }}">{{ n.fechaTxt }}</time></div><div><h3>{{ n.titulo }}</h3><p class="sub">{{ n.resumen }}</p></div><div><span class="pill ">{{ n.tipo }}</span></div></article>{% endmacro %}
+{% macro filaNoticia(n) %}<article class="row"><div class="when"><time datetime="{{ n.fecha }}">{{ n.fechaTxt }}</time></div><div><h3>{{ n.titulo }}</h3><p class="sub">{{ n.resumen }}</p>{% if n.imagen %}<img class="nimg" src="{{ n.imagen }}" alt="{{ n.imagen_alt }}" loading="lazy">{% endif %}</div><div><span class="pill ">{{ n.tipo }}</span></div></article>{% endmacro %}
 
 {% macro tablaFormados(lista) %}<div class="tbl-wrap"><table><thead><tr><th scope="col">Nombre</th><th scope="col">Trabajo</th><th scope="col">Nivel</th><th scope="col">Año</th><th scope="col">Dirección</th><th scope="col">Hoy</th></tr></thead><tbody>{% for f in lista %}<tr><th scope="row">{{ f.nombre }}</th><td>{{ f.trabajo }}</td><td>{{ f.nivel }}</td><td class="num">{{ f.anio }}</td><td>{{ persona(f.direccion) }}</td><td>{{ f.hoy }}</td></tr>{% endfor %}</tbody></table></div>{% endmacro %}
 

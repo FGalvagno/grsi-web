@@ -2,7 +2,7 @@
 
 <nav class="crumb" aria-label="Ruta" style="margin-bottom:16px"><a href="#equipo">Equipo</a> / {{ p.nombre }}</nav>
 <div class="person" style="gap:24px;flex-wrap:wrap">
-  <div class="avatar lg" aria-hidden="true">{{ p.iniciales }}</div>
+  {% if p.foto %}<img class="avatar lg" src="{{ p.foto }}" alt="Foto de {{ p.nombre }}">{% else %}<div class="avatar lg" aria-hidden="true">{{ p.iniciales }}</div>{% endif %}
   <div style="gap:8px;flex:1 1 280px">
     <p class="eyebrow">{{ p.categoria }}</p>
     <h1>{{ p.nombreCompleto }}</h1>
