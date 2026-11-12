@@ -1,0 +1,39 @@
+---
+permalink: /index.html
+---
+{%- import "macros.njk" as m -%}
+{%- set s = grsi.sitio -%}
+<!doctype html>
+<html lang="es-AR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>{{ s.titulo_buscadores }}</title>
+<meta name="description" content="{{ s.descripcion_buscadores }}">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..100,500..800&family=Source+Sans+3:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<link rel="stylesheet" href="estilos.css">
+<script>document.documentElement.classList.add('js');</script>
+</head>
+<body>
+{% include "cabecera.njk" %}
+{% include "vistas/inicio.njk" %}
+{% include "vistas/investigacion.njk" %}
+{% for l in grsi.lineas %}{% include "vistas/linea.njk" %}{% endfor %}
+{% include "vistas/equipo.njk" %}
+{% for p in grsi.personas %}{% include "vistas/persona.njk" %}{% endfor %}
+{% include "vistas/estudiantes.njk" %}
+{% include "vistas/empresas.njk" %}
+{% include "vistas/grupo.njk" %}
+{% include "vistas/noticias.njk" %}
+{% include "vistas/contacto.njk" %}
+{% include "vistas/modelo.njk" %}
+</main>
+{% include "pie.njk" %}
+</div>
+<script type="application/ld+json">{{ grsi.jsonld.sitio | jsonScript | safe }}</script>
+<script type="application/json" id="idx">{{ grsi.indice | jsonScript | safe }}</script>
+<script src="sitio.js"></script>
+</body>
+</html>

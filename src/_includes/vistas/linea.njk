@@ -1,0 +1,12 @@
+<article class="view" id="linea-{{ l.id }}" data-nav="investigacion">
+
+<header class="page-head"><nav class="crumb" aria-label="Ruta"><a href="#investigacion">Investigación</a> / {{ l.nombre }}</nav><p class="eyebrow">Línea de investigación</p><h1>{{ l.nombre }}</h1><p class="lead">{{ l.resumen }}</p></header>
+{{ m.maq(l.ruta, l.nombre + " · Investigación · " + s.sigla, l.resumen, "WebPage con fecha de revisión, palabras clave y responsable", l.jsonld) }}
+<div class="prose">{{ l.html | safe }}{% if l.palabras_clave.length %}<div class="tags">{% for k in l.palabras_clave %}<span class="pill ">{{ k }}</span>{% endfor %}</div>{% endif %}<p>{% if l.revisado %}<span class="rev">Revisado <time datetime="{{ l.revisado }}">{{ l.revisadoTxt }}</time></span>{% endif %}{% if l.responsable %} · Responsable: {{ m.persona(l.responsable) }}{% endif %}</p></div>
+<p class="nota"><b>Nota de diseño.</b> La página de la línea es el lugar donde se junta todo lo suyo: personas, proyectos, publicaciones, temas para estudiantes y servicios. Se arma sola y los bloques vacíos no se muestran.</p>
+{% if l.personas.length %}<section class="block"><header class="bh"><h2>Quiénes trabajan en esta línea</h2></header><div class="grid">{% for p in l.personas %}{{ m.tarjetaPersona(p) }}{% endfor %}</div></section>{% endif %}
+{% if l.proyectos.length %}<section class="block"><header class="bh"><h2>Proyectos</h2></header><div class="grid two">{% for x in l.proyectos %}{{ m.tarjetaProyecto(x) }}{% endfor %}</div></section>{% endif %}
+{% if l.publicaciones.length %}<section class="block"><header class="bh"><h2>Publicaciones</h2></header><div class="list">{% for b in l.publicaciones %}{{ m.filaPublicacion(b) }}{% endfor %}</div></section>{% endif %}
+{% if l.temas.length or l.servicios.length %}<section class="block"><header class="bh"><h2>Para estudiantes y empresas</h2></header><div class="list">{% for t in l.temas %}{{ m.filaTema(t) }}{% endfor %}{% for v in l.servicios %}<a class="row" href="#servicios"><div class="when">Servicio</div><div><h3>{{ v.nombre }}</h3><p class="sub">{{ v.descripcion }}</p></div><div></div></a>{% endfor %}</div></section>{% endif %}
+<section class="block"><div class="callout"><div><h3>¿Te interesa la {{ l.nombre }}?</h3><p>{% if l.responsable %}Escribile a {{ l.responsable.nombre }}, responsable de la línea, o al correo del grupo.{% else %}Escribinos al correo del grupo.{% endif %}</p></div><a class="btn primary" href="#contacto" data-motivo="Consulta académica">Consultar por esta línea</a></div></section>
+</article>

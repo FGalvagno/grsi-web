@@ -1,0 +1,22 @@
+titulo: "Escribinos"
+bajada: "Elegí a quién según lo que necesitás, o usá el correo del grupo."
+# Si un destinatario no tiene "persona", se muestra el correo del grupo.
+destinatarios:
+  - publico: "Estudiantes"
+    asunto: "Temas, becas y convocatorias"
+    persona: "p2"
+  - publico: "Empresas y organismos"
+    asunto: "Servicios y convenios"
+    persona: "p1"
+  - publico: "Colegios secundarios"
+    asunto: "Visitas y charlas"
+    persona: "p3"
+  - publico: "Prensa e institucional"
+    asunto: "Notas, visitas e informes"
+motivos:
+  - "Consulta académica"
+  - "Quiero sumarme al grupo"
+  - "Empresa u organismo"
+  - "Colegio secundario"
+  - "Prensa o institucional"
+  - "Otro"

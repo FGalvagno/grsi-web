@@ -1,0 +1,22 @@
+{% set pg = grsi.paginas.empresas %}
+<section class="view" id="empresas" data-nav="empresas">
+
+<header class="page-head"><p class="eyebrow">Empresas y organismos</p><h1>{{ pg.titulo }}</h1><p class="lead">{{ pg.bajada }}</p></header>
+{{ m.maq("/empresas/", "Servicios para empresas y organismos · Vinculación · " + s.sigla, "Servicios tecnológicos, capacitaciones, laboratorio y casos realizados del " + s.sigla + ", y cómo contratar al grupo por convenio o servicio tecnológico.", "OfferCatalog con un Service por servicio y FAQPage con las preguntas de empresas", grsi.jsonld.empresas) }}
+<nav class="jump" aria-label="En esta página"><span class="eyebrow">En esta página</span><a class="chip" href="#servicios">Servicios y capacitaciones</a><a class="chip" href="#laboratorio">Laboratorio</a><a class="chip" href="#casos">Casos realizados</a><a class="chip" href="#contratar">Cómo contratar</a></nav>
+<section class="block" id="servicios"><header class="bh"><h2>Servicios y capacitaciones</h2></header>
+<div class="grid two">{% for v in grsi.servicios %}<article class="card cc c-emp"><div class="chd"><h3>{{ v.nombre }}</h3></div><div class="cbd"><p class="meta">{{ v.descripcion }}</p><div class="foot">{% if v.linea %}<span class="meta">Línea: {{ m.linea(v.linea) }}</span>{% endif %}<a href="#contacto" data-motivo="Empresa u organismo">Consultar</a></div></div></article>{% endfor %}</div>
+{% if grsi.capacitaciones.length %}<h3 id="capacitaciones">Capacitaciones para la industria</h3>
+<div class="tbl-wrap"><table><thead><tr><th scope="col">Capacitación</th><th scope="col">Para quién y qué se aprende</th><th scope="col">Duración</th><th scope="col">Modalidad</th></tr></thead><tbody>{% for c in grsi.capacitaciones %}<tr><th scope="row">{{ c.nombre }}</th><td>{{ c.descripcion }}</td><td>{{ c.duracion }}</td><td>{{ c.modalidad }}</td></tr>{% endfor %}</tbody></table></div>{% endif %}
+</section>
+<section class="block" id="laboratorio"><header class="bh"><h2>Laboratorio y equipamiento</h2></header><div class="tbl-wrap"><table><thead><tr><th scope="col">Equipo</th><th scope="col">Para qué sirve</th><th scope="col">Proveedor</th><th scope="col">Línea</th></tr></thead><tbody>{% for e in grsi.equipamiento %}<tr><th scope="row">{{ e.nombre }}</th><td>{{ e.descripcion }}</td><td>{{ e.proveedor }}</td><td>{{ m.linea(e.linea) }}</td></tr>{% endfor %}</tbody></table></div></section>
+<section class="block" id="casos"><header class="bh"><h2>Casos realizados</h2></header><div class="grid two">{% for c in grsi.casos %}<article class="card cc c-emp"><div class="chd"><p class="eyebrow">{{ c.socio }} · {{ c.anio }}</p><h3>{{ c.nombre }}</h3></div><div class="cbd"><p class="meta">{{ c.descripcion }}</p>{% if c.servicio %}<div class="foot"><span class="meta">{{ c.servicio.nombre }}</span></div>{% endif %}</div></article>{% endfor %}</div></section>
+<section class="block" id="contratar"><header class="bh"><h2>Cómo contratar al grupo</h2></header>
+{{ m.pasos(pg.pasos) }}
+<div class="tbl-wrap"><table><thead><tr><th scope="col">Modalidad</th><th scope="col">Cuándo conviene</th><th scope="col">Qué se firma</th></tr></thead><tbody>{% for o in pg.modalidades %}<tr><th scope="row">{{ o.nombre }}</th><td>{{ o.cuando }}</td><td>{{ o.firma }}</td></tr>{% endfor %}</tbody></table></div>
+{% if pg.patrocinio %}<p class="prose" id="patrocinio"><b>Patrocinio.</b> {{ pg.patrocinio }}</p>{% endif %}
+{{ m.preguntas(pg.preguntas) }}
+<p class="nota"><b>Nota de diseño.</b> Pasos, modalidades y patrocinio quedaron en un solo bloque, junto con las preguntas frecuentes. Son textos de ejemplo.</p>
+</section>
+<section class="block"><div class="callout"><div><h3>{{ pg.cierre_titulo }}</h3><p>{{ pg.cierre_texto }}</p></div><a class="btn primary" href="#contacto" data-motivo="Empresa u organismo">Escribir al grupo</a></div></section>
+</section>

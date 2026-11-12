@@ -1,0 +1,7 @@
+<section class="view" id="equipo" data-nav="equipo">
+
+<header class="page-head"><p class="eyebrow">Equipo</p><h1>{{ grsi.paginas.equipo.titulo }}</h1><p class="lead">{{ grsi.paginas.equipo.bajada }}</p></header>
+{{ m.maq("/equipo/", "Equipo y tesis dirigidas · " + s.sigla, "Integrantes actuales del " + s.sigla + " con rol, líneas, contacto y ORCID, y tesis y trabajos finales dirigidos en el grupo.", "Una entidad Person por integrante y una Thesis por trabajo dirigido", grsi.jsonld.equipo) }}
+{% for g in grsi.equipo %}<section class="block"><header class="bh"><h2>{{ g.nombre }}</h2></header><div class="grid">{% for p in g.personas %}{{ m.tarjetaPersona(p) }}{% endfor %}</div></section>{% endfor %}
+<section class="block" id="formados"><header class="bh"><h2>Se formaron en el grupo</h2><span class="rev">{{ grsi.numeros.formados }} tesis y trabajos finales</span></header><p class="nota"><b>Nota de diseño.</b> Una sola tabla reemplaza a “Ex integrantes” y “Tesis dirigidas”, que mostraban a las mismas personas en dos secciones distintas.</p>{{ m.tablaFormados(grsi.formados) }}</section>
+</section>

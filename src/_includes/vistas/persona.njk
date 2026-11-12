@@ -1,0 +1,22 @@
+<article class="view" id="persona-{{ p.id }}" data-nav="equipo">
+
+<nav class="crumb" aria-label="Ruta" style="margin-bottom:16px"><a href="#equipo">Equipo</a> / {{ p.nombre }}</nav>
+<div class="person" style="gap:24px;flex-wrap:wrap">
+  <div class="avatar lg" aria-hidden="true">{{ p.iniciales }}</div>
+  <div style="gap:8px;flex:1 1 280px">
+    <p class="eyebrow">{{ p.categoria }}</p>
+    <h1>{{ p.nombreCompleto }}</h1>
+    <p class="sub">{{ p.rol }}</p>
+    <div class="tags">{% for l in p.lineas %}<a class="pill" href="#linea-{{ l.id }}">{{ l.nombre }}</a>{% endfor %}</div>
+    {% if p.correo %}<p>Correo: {{ m.copiar(p.correo) }}</p>{% endif %}
+    <p class="sm">{% if p.orcid %}ORCID <span class="mono">{{ p.orcid }}</span> · {% endif %}Google Scholar · CONICET Digital · RDU-UNC</p>
+  </div>
+</div>
+<div class="prose" style="margin-block:24px">{{ p.html | safe }}</div>
+{{ m.maq(p.ruta, p.nombreCompleto + " · " + p.rol + " · " + s.sigla, p.texto, "Person con cargo, correo, ORCID (sameAs) y pertenencia al grupo", p.jsonld) }}
+{% if p.proyectos.length %}<section class="block"><header class="bh"><h2>Proyectos</h2></header><div class="grid two">{% for x in p.proyectos %}{{ m.tarjetaProyecto(x) }}{% endfor %}</div></section>{% endif %}
+{% if p.publicaciones.length %}<section class="block"><header class="bh"><h2>Publicaciones</h2></header><div class="list">{% for b in p.publicaciones %}{{ m.filaPublicacion(b) }}{% endfor %}</div></section>{% endif %}
+{% if p.temas.length %}<section class="block"><header class="bh"><h2>Temas que ofrece para estudiantes</h2></header><div class="list">{% for t in p.temas %}{{ m.filaTema(t) }}{% endfor %}</div></section>{% endif %}
+{% if p.formados.length %}<section class="block"><header class="bh"><h2>Tesis y trabajos finales que dirigió</h2></header>{{ m.tablaFormados(p.formados) }}</section>{% endif %}
+{% if p.materias.length %}<section class="block"><header class="bh"><h2>Materias</h2></header><div class="tbl-wrap"><table><thead><tr><th scope="col">Materia</th><th scope="col">Carrera</th><th scope="col">Tipo</th><th scope="col">Período</th></tr></thead><tbody>{% for a in p.materias %}<tr><th scope="row">{{ a.nombre }}</th><td>{{ a.carrera }}</td><td>{{ a.tipo }}</td><td>{{ a.periodo }}</td></tr>{% endfor %}</tbody></table></div></section>{% endif %}
+</article>

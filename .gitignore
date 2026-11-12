@@ -1,3 +1,7 @@
+# Dependencias y sitio generado (se crean con npm install y npm run build)
+node_modules/
+_site/
+
 # Sistema operativo y editores
 .DS_Store
 Thumbs.db
@@ -5,8 +9,3 @@ desktop.ini
 .vscode/
 .idea/
 *.swp
-
-# Dependencias y salidas de compilación (por si más adelante se suma un generador)
-node_modules/
-dist/
-.cache/

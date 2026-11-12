@@ -1,0 +1,25 @@
+{% set pg = grsi.contacto %}
+<section class="view" id="contacto" data-nav="contacto">
+
+<header class="page-head"><p class="eyebrow">Contacto</p><h1>{{ pg.titulo }}</h1><p class="lead">{{ pg.bajada }}</p></header>
+{{ m.maq("/contacto/", "Contacto y cómo llegar · " + s.sigla, "Correo, teléfono, dirección y formulario de contacto del " + s.sigla + ", " + s.facultad_sigla + ", " + s.universidad + ".", "ContactPage con dirección postal y puntos de contacto por tipo de consulta", grsi.jsonld.contacto) }}
+<div class="grid">
+{% for d in pg.destinatarios %}  <div class="card"><p class="eyebrow">{{ d.publico }}</p><h3>{{ d.asunto }}</h3><p class="meta">{% if d.persona %}{{ m.persona(d.persona) }}{% else %}Correo del grupo{% endif %}</p><p>{{ m.copiar(d.correo) }}</p></div>
+{% endfor %}</div>
+<p class="nota"><b>Nota de diseño.</b> Cuatro destinatarios según quién escribe. Las direcciones son de ejemplo; el correo y el dominio del grupo están por definirse.</p>
+<section class="block"><div class="cols2">
+  <form class="contact card" id="cform" novalidate>
+    <h2>Enviar una consulta</h2>
+    <label class="f" for="cNombre">Nombre<input id="cNombre" autocomplete="name" required></label>
+    <label class="f" for="cMail">Correo<input id="cMail" type="email" autocomplete="email" required></label>
+    <label class="f" for="cTipo">Motivo<select id="cTipo">{% for o in pg.motivos %}<option>{{ o }}</option>{% endfor %}</select></label>
+    <label class="f" for="cMsg">Mensaje<textarea id="cMsg" rows="5" required></textarea></label>
+    <div><button class="btn primary" type="submit">Enviar consulta</button></div>
+    <p class="meta" id="cOut" role="status"></p>
+  </form>
+  <div>
+    <div class="card"><p class="eyebrow">Cómo llegar</p><address style="font-style:normal">{{ s.facultad }}<br>{% if s.edificio %}{{ s.edificio }} · {% endif %}{{ s.departamento }}<br>{{ s.calle }}<br>{{ s.codigo_postal }} {{ s.localidad }}, {{ s.pais }}</address></div>
+    {% if s.telefono %}<div class="card"><p class="eyebrow">Teléfono</p><p>{{ m.copiar(s.telefono) }}</p>{% if s.telefono_nota %}<p class="meta">{{ s.telefono_nota }}</p>{% endif %}</div>{% endif %}
+  </div>
+</div></section>
+</section>

@@ -1,0 +1,44 @@
+{# Piezas que se repiten en varias vistas #}
+
+{% macro maq(ruta, titulo, descripcion, datos, jsonld) %}
+<aside class="maq" aria-label="Cómo lee esta página un buscador o una IA">
+<p class="maq-h">Así lee esta página un buscador o una IA</p>
+<dl><dt>Dirección propia</dt><dd><code>{{ ruta }}</code></dd><dt>Título</dt><dd>{{ titulo }}</dd><dt>Descripción</dt><dd>{{ descripcion | recortar(150) }}</dd><dt>Datos estructurados</dt><dd>{{ datos }}</dd></dl>
+<details><summary>Ver el JSON-LD de esta página</summary><pre>{{ jsonld | jsonLindo }}</pre></details></aside>
+{% endmacro %}
+
+{% macro persona(p) %}{% if p %}<a href="#persona-{{ p.id }}">{{ p.nombre }}</a>{% endif %}{% endmacro %}
+{% macro linea(l) %}{% if l %}<a href="#linea-{{ l.id }}">{{ l.nombre }}</a>{% endif %}{% endmacro %}
+
+{% macro tarjetaPersona(p) %}<a class="card" href="#persona-{{ p.id }}"><div class="person"><div class="avatar" aria-hidden="true">{{ p.iniciales }}</div><div><h3>{{ p.nombreCompleto }}</h3><p class="meta">{{ p.rol }}</p><p class="meta">{% for l in p.lineas %}{{ l.nombre }}{% if not loop.last %} · {% endif %}{% endfor %}</p></div></div></a>{% endmacro %}
+
+{% macro tarjetaProyecto(x) %}<a class="card" href="#proyecto-{{ x.id }}"><div class="thumb" aria-hidden="true">Foto · {{ x.nombre }}</div><div class="tags"><span class="pill {{ 'active' if x.enCurso else 'done' }}">{{ x.estado }}</span><span class="pill ">{{ x.tipo }}</span></div><h3>{{ x.nombre }}</h3><p class="meta">{{ x.resumen }}</p><div class="foot mono">{{ x.periodo }}{% if x.financiador %} · {{ x.financiador }}{% endif %}{% if x.director %} · Dir. {{ x.director.nombre }}{% endif %}</div></a>{% endmacro %}
+
+{% macro filaPublicacion(b) %}<article class="row pub" data-anio="{{ b.anio }}" data-tipo="{{ b.tipo }}" data-lineas="{{ b.lineasIds }}" data-txt="{{ b.txt }}">
+<div class="when">{{ b.anio }}</div>
+<div><h3>{{ b.titulo }}</h3><p class="sub sm">{% for a in b.autores %}{% if a.persona %}<a href="#persona-{{ a.persona.id }}">{{ a.nombre }}</a>{% else %}{{ a.nombre }}{% endif %}{% if not loop.last %}, {% endif %}{% endfor %}{% if b.medio %} · <i>{{ b.medio }}</i>{% endif %}{% if b.doi %} · DOI <span class="mono">{{ b.doi }}</span>{% endif %}</p>
+<div class="tags"><span class="pill ">{{ b.tipo }}</span>{% for l in b.lineas %}<a class="pill" href="#linea-{{ l.id }}">{{ l.nombre }}</a>{% endfor %}{% if b.proyecto %}<a class="pill" href="#proyecto-{{ b.proyecto.id }}">{{ b.proyecto.nombre }}</a>{% endif %}</div>
+<details class="bib"><summary>BibTeX</summary><pre>{{ b.bibtex }}</pre><button class="btn ghost small js-only" type="button" data-copy-prev>Copiar BibTeX</button></details></div></article>{% endmacro %}
+
+{% macro filaTema(t) %}<article class="row tema" data-tipo="{{ t.tipo }}"><div class="when">Alta <time datetime="{{ t.alta }}">{{ t.altaTxt }}</time></div><div><h3>{{ t.titulo }}</h3><p class="sub">{{ t.descripcion }}</p><p class="sub sm">{{ t.tipo }}{% if t.dirige %} · Dirige {{ persona(t.dirige) }}{% endif %}{% if t.linea %} · {{ linea(t.linea) }}{% endif %}</p></div><div><span class="pill {{ 'ok' if t.disponible else 'done' }}">{{ t.estado }}</span></div></article>{% endmacro %}
+
+{% macro filaNoticia(n) %}<article class="row"><div class="when"><time datetime="{{ n.fecha }}">{{ n.fechaTxt }}</time></div><div><h3>{{ n.titulo }}</h3><p class="sub">{{ n.resumen }}</p></div><div><span class="pill ">{{ n.tipo }}</span></div></article>{% endmacro %}
+
+{% macro tablaFormados(lista) %}<div class="tbl-wrap"><table><thead><tr><th scope="col">Nombre</th><th scope="col">Trabajo</th><th scope="col">Nivel</th><th scope="col">Año</th><th scope="col">Dirección</th><th scope="col">Hoy</th></tr></thead><tbody>{% for f in lista %}<tr><th scope="row">{{ f.nombre }}</th><td>{{ f.trabajo }}</td><td>{{ f.nivel }}</td><td class="num">{{ f.anio }}</td><td>{{ persona(f.direccion) }}</td><td>{{ f.hoy }}</td></tr>{% endfor %}</tbody></table></div>{% endmacro %}
+
+{% macro numeros(n) %}<div class="stats">
+  <a href="#investigacion"><b>{{ n.lineas }}</b><span>líneas de investigación</span></a>
+  <a href="#proyectos"><b>{{ n.proyectosEnCurso }}</b><span>proyectos en curso</span></a>
+  <a href="#equipo"><b>{{ n.integrantes }}</b><span>integrantes</span></a>
+  <a href="#publicaciones"><b>{{ n.publicaciones }}</b><span>publicaciones</span></a>
+  <a href="#formados"><b>{{ n.formados }}</b><span>tesis y trabajos dirigidos</span></a>
+  <a href="#historia"><b>{{ n.anios }}</b><span>años de trayectoria</span></a>
+</div>{% endmacro %}
+
+{% macro copiar(texto) %}<span class="copyfield"><code>{{ texto }}</code><button class="btn ghost small js-only" type="button" data-copy="{{ texto }}">Copiar</button></span>{% endmacro %}
+
+{% macro preguntas(lista) %}<div class="faq">{% for q in lista %}<details><summary>{{ q.pregunta }}</summary><p>{{ q.respuesta }}</p></details>{% endfor %}</div>{% endmacro %}
+
+{% macro pasos(lista) %}<ol class="steps">
+{% for p in lista %}  <li><h3>{{ p.titulo }}</h3><p class="sub">{{ p.texto }}</p></li>
+{% endfor %}</ol>{% endmacro %}

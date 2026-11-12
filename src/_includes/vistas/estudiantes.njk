@@ -1,0 +1,24 @@
+{% set pg = grsi.paginas.estudiantes %}
+<section class="view" id="estudiantes" data-nav="estudiantes">
+
+<header class="page-head"><p class="eyebrow">Estudiantes</p><h1>{{ pg.titulo }}</h1><p class="lead">{{ pg.bajada }}</p></header>
+{{ m.maq("/estudiantes/", "Sumate al " + s.sigla + ": convocatorias, temas de tesis y posgrado", "Convocatorias abiertas con fecha de cierre, temas para Proyecto Integrador, Práctica Supervisada y posgrado, y cómo postularte al " + s.sigla + ".", "JobPosting por convocatoria (con validThrough, la fecha de cierre), Course por materia y FAQPage con las preguntas", grsi.jsonld.estudiantes) }}
+<nav class="jump" aria-label="En esta página"><span class="eyebrow">En esta página</span><a class="chip" href="#convocatorias">Convocatorias abiertas</a><a class="chip" href="#temas">Temas</a><a class="chip" href="#postular">Cómo sumarte</a><a class="chip" href="#materias">Materias</a></nav>
+<section class="block" id="convocatorias"><header class="bh"><h2>Convocatorias abiertas</h2><span class="rev"><span data-conv-count>{{ grsi.convocatorias.length }}</span> abiertas</span></header>
+<p class="nota"><b>Nota de diseño.</b> Las convocatorias vencidas desaparecen solas al pasar la fecha de cierre (en este ejemplo se ocultaron 2).</p>
+<div class="grid two" id="convList">{% for c in grsi.convocatorias %}<article class="card cc c-est conv" data-cierre="{{ c.cierre }}"><div class="chd"><p class="eyebrow">{{ c.tipo }}</p><h3>{{ c.titulo }}</h3></div><div class="cbd"><p class="meta">{{ c.descripcion }}</p><div class="foot"><span class="mono">Cierra el <time datetime="{{ c.cierre }}">{{ c.cierreTxt }}</time><span class="falta"></span></span>{% if c.consultas %}<span class="meta">Consultas: {{ m.persona(c.consultas) }}</span>{% endif %}</div></div></article>{% endfor %}</div>
+<p class="empty" id="convEmpty"{% if grsi.convocatorias.length %} hidden{% endif %}>No hay convocatorias abiertas en este momento. Igual podés escribirnos: mirá los temas disponibles más abajo.</p>
+</section>
+<section class="block" id="temas"><header class="bh"><h2>Temas para trabajos finales y tesis</h2><span class="rev">{{ grsi.numeros.temasDisponibles }} disponibles</span></header>
+<div class="filters js-only" role="group" aria-label="Filtrar temas por tipo de trabajo"><button class="chip" type="button" data-tema-f="" aria-pressed="true">Todos</button>{% for t in ["Proyecto Integrador", "Práctica Supervisada", "Maestría", "Doctorado"] %}<button class="chip" type="button" data-tema-f="{{ t }}" aria-pressed="false">{{ t }}</button>{% endfor %}</div>
+<div class="list" id="temaList">{% for t in grsi.temas %}{{ m.filaTema(t) }}{% endfor %}</div>
+<p class="empty" id="temaEmpty" hidden>No hay temas publicados de ese tipo. Podés proponer uno escribiéndole a quien dirige la línea que te interesa.</p>
+<p class="prose" id="posgrado"><b>Posgrado.</b> Para maestría y doctorado pueden dirigirte {% for p in grsi.dirigenPosgrado %}{{ m.persona(p) }}{% if not loop.last %}, {% endif %}{% endfor %}. Las tesis ya dirigidas están en <a href="#formados">Equipo</a>.</p>
+</section>
+<section class="block" id="postular"><header class="bh"><h2>Cómo sumarte</h2></header>
+{{ m.pasos(pg.pasos) }}
+{{ m.preguntas(pg.preguntas) }}
+</section>
+<section class="block" id="materias"><header class="bh"><h2>Materias que dictamos</h2></header><div class="tbl-wrap"><table><thead><tr><th scope="col">Materia</th><th scope="col">Carrera</th><th scope="col">Tipo</th><th scope="col">Período</th><th scope="col">Responsable</th></tr></thead><tbody>{% for a in grsi.materias %}<tr><th scope="row">{{ a.nombre }}</th><td>{{ a.carrera }}</td><td>{{ a.tipo }}</td><td>{{ a.periodo }}</td><td>{{ m.persona(a.responsable) }}</td></tr>{% endfor %}</tbody></table></div></section>
+<section class="block"><div class="callout"><div><h3>{{ pg.cierre_titulo }}</h3><p>{{ pg.cierre_texto }}</p></div><a class="btn primary" href="#contacto" data-motivo="Quiero sumarme al grupo">Escribir al grupo</a></div></section>
+</section>

@@ -1,0 +1,15 @@
+titulo: "Quiénes somos"
+bajada: "Presentación institucional del GRSI en un párrafo de cuatro o cinco líneas: pertenencia, alcance y forma de trabajo, escrita para alguien que no es del área."
+mision: "Texto de la misión en una o dos oraciones: para qué existe el grupo y a quién sirve."
+vision: "Texto de la visión en una o dos oraciones: adónde quiere llegar el grupo en los próximos años."
+objetivos:
+  - "Objetivo 1: enunciado breve de uno de los propósitos permanentes del grupo."
+  - "Objetivo 2: enunciado breve de uno de los propósitos permanentes del grupo."
+  - "Objetivo 3: enunciado breve de uno de los propósitos permanentes del grupo."
+  - "Objetivo 4: enunciado breve de uno de los propósitos permanentes del grupo."
+  - "Objetivo 5: enunciado breve de uno de los propósitos permanentes del grupo."
+colegios:
+  - titulo: "Visita al laboratorio"
+    texto: "Qué ven los estudiantes, para qué años está pensada, cuánto dura y cuántas personas pueden venir por grupo."
+  - titulo: "Charla en el colegio"
+    texto: "Temas disponibles, duración y qué necesita el grupo para dictarla en la escuela."

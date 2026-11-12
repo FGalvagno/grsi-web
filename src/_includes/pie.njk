@@ -1,0 +1,29 @@
+<footer class="site">
+  <div class="wrap cols">
+    <div>
+      <h4>{{ s.sigla }}</h4>
+      <p>{{ s.nombre }}<br>{{ s.departamento }} · {{ s.facultad_sigla }} · {{ s.universidad_sigla }}</p>
+      <p style="margin-top:8px">{{ s.calle }}<br>{{ s.codigo_postal }} {{ s.localidad }}, {{ s.pais }}</p>
+    </div>
+    <div>
+      <h4>El sitio</h4>
+      <ul>
+        <li><a href="#grupo">El grupo: historia y convenios</a></li>
+        <li><a href="#equipo">Equipo</a></li>
+        <li><a href="#investigacion">Investigación</a></li>
+        <li><a href="#estudiantes">Estudiantes</a></li>
+        <li><a href="#empresas">Empresas y organismos</a></li>
+        <li><a href="#noticias">Noticias</a></li>
+        <li><a href="#contacto">Contacto</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Institucional</h4>
+      <ul>
+        <li><a href="{{ s.ficha_oficial }}">Ficha oficial del grupo en la {{ s.facultad_sigla }}</a></li>
+        <li><a href="{{ s.universidad_url }}">{{ s.universidad }}</a></li>
+      </ul>
+      <p style="margin-top:10px">Última actualización: <span class="mono"><time datetime="{{ grsi.actualizado }}">{{ grsi.actualizadoTxt }}</time></span>{% if s.pie_nota %} · {{ s.pie_nota }}{% endif %}</p>
+    </div>
+  </div>
+</footer>

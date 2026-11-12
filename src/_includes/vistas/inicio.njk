@@ -1,0 +1,29 @@
+<section class="view" id="inicio" data-nav="inicio">
+
+<div class="hero">
+  <div class="hero-t">
+    <p class="eyebrow">{{ s.departamento }} · {{ s.facultad_sigla }} · {{ s.universidad }}</p>
+    <h1>{{ s.nombre }}</h1>
+    <p class="lead">{{ s.presentacion }}</p>
+    <button class="fakesearch js-only" type="button" data-open-search><svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><circle cx="7" cy="7" r="4.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M10.5 10.5 14 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg><span>Buscá personas, temas o servicios</span><kbd>/</kbd></button>
+  </div>
+  {% include "lazo.njk" %}
+</div>
+<section class="block" id="perfiles">
+  <header class="bh"><h2>¿Qué venís a buscar?</h2></header>
+  {{ m.maq("/", s.titulo_buscadores, s.descripcion_buscadores, "WebSite y ResearchOrganization (nombre, sigla, pertenencia, año de inicio, dirección, líneas)", grsi.jsonld.inicio) }}
+  <p class="nota"><b>Nota de diseño.</b> La portada resuelve el primer clic de casi todos: tres accesos por perfil, las líneas, el grupo en números y las últimas noticias. El menú tiene cinco entradas.</p>
+  <div class="profiles">
+    <div class="profile p1"><div class="ph"><p class="eyebrow">Grado, posgrado y otras universidades</p><h3>Soy estudiante</h3><p class="sub">Trabajo final, práctica, beca o tesis en el grupo.</p></div>
+      <ul><li><a href="#convocatorias"><span>Convocatorias abiertas<span class="count" data-conv-count>{{ grsi.convocatorias.length }}</span></span></a></li><li><a href="#temas">Temas para trabajos finales y tesis</a></li><li><a href="#postular">Cómo sumarte</a></li></ul></div>
+    <div class="profile p2"><div class="ph"><p class="eyebrow">Industria, pymes y sector público</p><h3>Soy empresa u organismo</h3><p class="sub">Un problema de automatización, control o robótica para resolver.</p></div>
+      <ul><li><a href="#servicios">Servicios y capacitaciones</a></li><li><a href="#laboratorio">Laboratorio y equipamiento</a></li><li><a href="#contratar">Cómo contratar al grupo</a></li></ul></div>
+    <div class="profile p3"><div class="ph"><p class="eyebrow">De otras instituciones, evaluadores y socios</p><h3>Soy investigador o docente</h3><p class="sub">Qué hace el grupo, con quién y qué produjo.</p></div>
+      <ul><li><a href="#investigacion">Líneas y proyectos</a></li><li><a href="#publicaciones">Publicaciones</a></li><li><a href="#equipo">Equipo y tesis dirigidas</a></li></ul></div>
+  </div>
+  <p class="sub">¿Sos docente de un colegio secundario? <a href="#colegios">Visitas al laboratorio y charlas</a>.</p>
+</section>
+<section class="block"><header class="bh"><h2>Líneas de investigación</h2><a href="#investigacion">Proyectos y publicaciones</a></header><div class="list">{% for l in grsi.lineas %}<a class="row" href="#linea-{{ l.id }}"><div class="when">{{ l.sigla }}</div><div><h3>{{ l.nombre }}</h3><p class="sub">{{ l.resumen }}</p></div><div class="sub sm">{{ l.responsable.nombre if l.responsable }}</div></a>{% endfor %}</div></section>
+<section class="block"><header class="bh"><h2>El grupo en números</h2><a href="#grupo">Quiénes somos, historia y convenios</a></header>{{ m.numeros(grsi.numeros) }}</section>
+<section class="block"><header class="bh"><h2>Últimas noticias</h2><a href="#noticias">Todas las noticias</a></header><div class="list">{% for n in grsi.noticias.slice(0, 3) %}{{ m.filaNoticia(n) }}{% endfor %}</div></section>
+</section>

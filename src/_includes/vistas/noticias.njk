@@ -1,0 +1,6 @@
+<section class="view" id="noticias" data-nav="grupo">
+
+<header class="page-head"><nav class="crumb" aria-label="Ruta"><a href="#grupo">El grupo</a> / Noticias</nav><p class="eyebrow">Noticias</p><h1>{{ grsi.paginas.noticias.titulo }}</h1><p class="lead">{{ grsi.paginas.noticias.bajada }}</p></header>
+<p class="nota"><b>Nota de diseño.</b> Las pruebas de equipos de proveedores se publican acá como “Nota técnica”, no como reseña, y siempre dicen si el equipo fue donado o prestado.</p>
+<div class="list">{% for n in grsi.noticias %}{{ m.filaNoticia(n) }}{% endfor %}</div>
+</section>
