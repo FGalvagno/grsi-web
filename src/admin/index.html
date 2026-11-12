@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Administrar contenido · GRSI</title>
+</head>
+<body>
+<script>window.CMS_MANUAL_INIT = true;</script>
+<script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+<script>
+  // El resto de la configuración está en config.yml. Acá solo se indica dónde está
+  // el inicio de sesión: en este mismo sitio (/api/auth), sea cual sea el dominio.
+  CMS.init({ config: { backend: { base_url: window.location.origin, auth_endpoint: "api/auth" } } });
+</script>
+</body>
+</html>

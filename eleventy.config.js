@@ -1,7 +1,7 @@
 /* Configuración de Eleventy: plantillas en /src, contenido en /contenido, sitio generado en /_site */
 module.exports = function (eleventyConfig) {
   // Archivos que se copian tal cual al sitio publicado
-  eleventyConfig.addPassthroughCopy({ "src/estilos.css": "estilos.css", "src/sitio.js": "sitio.js", "public": "/" });
+  eleventyConfig.addPassthroughCopy({ "src/estilos.css": "estilos.css", "src/sitio.js": "sitio.js", "src/admin": "admin", "public": "/" });
 
   // Al editar el contenido con `npm run dev`, el sitio se vuelve a generar
   eleventyConfig.addWatchTarget("./contenido/");

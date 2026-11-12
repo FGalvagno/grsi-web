@@ -4,7 +4,7 @@ Sitio del **Grupo de Robótica y Sistemas Integrados** (GRSI), Departamento de E
 
 Estado actual: **sitio modelo v3**, con contenidos de ejemplo (Persona 1, Línea 1, Proyecto 1…) que hay que reemplazar por los reales.
 
-El sitio se genera con [Eleventy](https://www.11ty.dev/): el **contenido** está en archivos de texto en `contenido/` y las **plantillas** en `src/`. Está preparado para sumarle un CMS basado en Git como Decap, que solo tiene que editar los archivos de `contenido/`.
+El sitio se genera con [Eleventy](https://www.11ty.dev/): el **contenido** está en archivos de texto en `contenido/` y las **plantillas** en `src/`. El contenido también se puede editar desde el navegador con Decap CMS, en `/admin/`.
 
 ## Estructura
 
@@ -17,6 +17,8 @@ El sitio se genera con [Eleventy](https://www.11ty.dev/): el **contenido** está
 | `src/_includes/` | Vistas, cabecera, pie y piezas repetidas (`macros.njk`). |
 | `src/_data/grsi.js` | Lee `contenido/` y arma relaciones, números, buscador y datos estructurados. |
 | `src/estilos.css`, `src/sitio.js` | Estilos y comportamiento (menú, buscador, filtros). |
+| `src/admin/` | Administrador de contenido (Decap CMS). |
+| `functions/` | Funciones de Cloudflare Pages para el inicio de sesión del administrador. |
 | `public/` | Archivos que se publican tal cual: `_headers` de Cloudflare e imágenes en `public/img/`. |
 | `_site/` | Sitio generado. No se sube al repositorio. |
 
@@ -82,15 +84,44 @@ Reglas que aplica el sitio solo:
 - Las fechas van como `AAAA-MM-DD`.
 - Hitos y convenios se mezclan por año en la línea de tiempo de "El grupo".
 
-## Para agregar Decap CMS
+## Editar con Decap CMS
 
-El proyecto ya tiene lo que Decap necesita: contenido en archivos con datos al inicio, una carpeta por colección y un paso de compilación. Falta:
+El administrador está en `/admin/`. Cada cambio que se guarda ahí es un commit en `main`, y Cloudflare vuelve a publicar el sitio solo.
 
-1. `src/admin/index.html` y `src/admin/config.yml`, y copiarlos al sitio agregando `"src/admin": "admin"` en `addPassthroughCopy` de `eleventy.config.js`.
-2. En `config.yml`, una colección de tipo carpeta por cada fila de la tabla de arriba (`folder: contenido/equipo`, `extension: md`, `format: frontmatter`, `slug: "{{slug}}"`), y colecciones de tipo archivo para `contenido/sitio.yml` y `contenido/paginas/*.yml`.
-3. Para los campos que apuntan a otro elemento, el widget `relation` con `value_field: "{{slug}}"`.
-4. Para imágenes: `media_folder: public/img` y `public_folder: /img`.
-5. El inicio de sesión con GitHub: una OAuth App y dos funciones en `functions/api/` (Cloudflare Pages las publica solas), más las variables `GITHUB_CLIENT_ID` y `GITHUB_CLIENT_SECRET` en Cloudflare.
+| Archivo | Para qué sirve |
+| --- | --- |
+| `src/admin/index.html` | Página que carga Decap. |
+| `src/admin/config.yml` | Qué se puede editar: una colección por cada carpeta de `contenido/`. |
+| `functions/api/auth.js`, `functions/api/callback.js` | Inicio de sesión con GitHub. Cloudflare Pages las publica en `/api/auth` y `/api/callback`. |
+
+### Configuración (una sola vez)
+
+1. **Crear una OAuth App en GitHub**: Settings → Developer settings → OAuth Apps → New OAuth App.
+   - Homepage URL: la dirección del sitio (por ejemplo `https://grsi-web.pages.dev`).
+   - Authorization callback URL: la misma dirección seguida de `/api/callback`.
+   - Copiar el **Client ID** y generar un **Client secret**.
+2. **Cargar las credenciales en Cloudflare Pages**: proyecto → Settings → Variables and Secrets, en Production:
+   - `GITHUB_CLIENT_ID`
+   - `GITHUB_CLIENT_SECRET` (como secreto)
+3. **Volver a desplegar** para que las funciones tomen las variables.
+4. Entrar a `/admin/` e iniciar sesión con GitHub.
+
+Puede editar quien tenga permiso de escritura en el repositorio (Settings → Collaborators). Si el sitio cambia de dominio, hay que actualizar las dos direcciones de la OAuth App.
+
+### Probar el administrador en la computadora
+
+Sin iniciar sesión y escribiendo directamente en los archivos locales:
+
+```
+npm run dev          # en una terminal
+npx decap-server     # en otra
+```
+
+y abrir <http://localhost:8080/admin/>.
+
+### Al agregar un campo o una colección
+
+Hay que tocar tres lugares: el campo en `src/admin/config.yml`, su uso en la plantilla (`src/_includes/`) y, si es una colección nueva, su lectura en `src/_data/grsi.js`.
 
 ## Pendiente antes de publicarlo como sitio oficial
 

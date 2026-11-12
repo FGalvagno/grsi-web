@@ -1,0 +1,398 @@
+# Configuración de Decap CMS. Se abre en /admin/.
+# Cada colección apunta a una carpeta o archivo de /contenido (ver README).
+
+backend:
+  name: github
+  repo: FGalvagno/grsi-web
+  branch: main
+  # base_url y auth_endpoint se definen en index.html: el inicio de sesión está en este mismo sitio (/api/auth)
+  commit_messages:
+    create: "Contenido: agregar {{collection}} «{{slug}}»"
+    update: "Contenido: editar {{collection}} «{{slug}}»"
+    delete: "Contenido: borrar {{collection}} «{{slug}}»"
+    uploadMedia: "Contenido: subir {{path}}"
+    deleteMedia: "Contenido: borrar {{path}}"
+
+# Para probar en la computadora sin iniciar sesión: `npx decap-server` en otra terminal
+local_backend: true
+
+locale: es
+media_folder: public/img
+public_folder: /img
+slug:
+  encoding: ascii
+  clean_accents: true
+editor:
+  preview: false
+
+collections:
+  - name: noticias
+    label: "Noticias"
+    label_singular: "noticia"
+    folder: contenido/noticias
+    extension: md
+    format: frontmatter
+    create: true
+    identifier_field: titulo
+    slug: "{{fields.fecha}}-{{slug}}"
+    summary: "{{titulo}} · {{fecha}}"
+    fields:
+      - { name: titulo, label: "Título", widget: string, required: true }
+      - { name: fecha, label: "Fecha", widget: datetime, required: true, date_format: "YYYY-MM-DD", time_format: false, picker_utc: true }
+      - { name: tipo, label: "Tipo", widget: string, required: true, hint: "Por ejemplo: Defensa de tesis, Congreso, Visita, Equipamiento, Nota técnica" }
+      - { name: resumen, label: "Resumen", widget: text, required: true }
+
+  - name: equipo
+    label: "Equipo"
+    label_singular: "integrante"
+    folder: contenido/equipo
+    extension: md
+    format: frontmatter
+    create: true
+    identifier_field: nombre
+    slug: "{{slug}}"
+    summary: "{{nombre}} · {{rol}}"
+    fields:
+      - { name: nombre, label: "Nombre y apellido", widget: string, required: true }
+      - { name: titulo, label: "Título", widget: string, required: false, hint: "Dr., Dra., Ing., Mgter. Se muestra antes del nombre." }
+      - { name: rol, label: "Rol en el grupo", widget: string, required: true, hint: "Director, Investigadora, Becario doctoral…" }
+      - { name: categoria, label: "Categoría", widget: select, required: true, options: ["Dirección", "Investigadores", "Becarios y tesistas de posgrado", "Estudiantes y ayudantes"] }
+      - { name: lineas, label: "Líneas", widget: relation, collection: lineas, search_fields: [nombre], display_fields: [nombre], value_field: "{{slug}}", multiple: true, required: false, hint: "La primera es la principal." }
+      - { name: correo, label: "Correo", widget: string, required: false }
+      - { name: orcid, label: "ORCID", widget: string, required: false, hint: "Solo el número: 0000-0000-0000-0000" }
+      - { name: orden, label: "Orden", widget: number, required: false, value_type: int, hint: "Opcional. Los números más bajos van primero." }
+      - { name: body, label: "Reseña", widget: markdown, required: false }
+
+  - name: lineas
+    label: "Líneas de investigación"
+    label_singular: "línea"
+    folder: contenido/lineas
+    extension: md
+    format: frontmatter
+    create: true
+    identifier_field: nombre
+    slug: "{{slug}}"
+    summary: "{{sigla}} · {{nombre}}"
+    fields:
+      - { name: nombre, label: "Nombre", widget: string, required: true }
+      - { name: sigla, label: "Sigla", widget: string, required: true, hint: "Etiqueta corta: L1, L2…" }
+      - { name: resumen, label: "Resumen", widget: text, required: true, hint: "Dos o tres oraciones sin jerga." }
+      - { name: responsable, label: "Responsable", widget: relation, collection: equipo, search_fields: [nombre], display_fields: [nombre], value_field: "{{slug}}", required: false }
+      - { name: palabras_clave, label: "Palabras clave", widget: list, required: false, summary: "{{fields.valor}}", field: { name: valor, label: "Palabra clave", widget: string } }
+      - { name: revisado, label: "Última revisión", widget: datetime, required: false, date_format: "YYYY-MM-DD", time_format: false, picker_utc: true }
+      - { name: orden, label: "Orden", widget: number, required: false, value_type: int }
+      - { name: body, label: "Texto ampliado", widget: markdown, required: false }
+
+  - name: proyectos
+    label: "Proyectos"
+    label_singular: "proyecto"
+    folder: contenido/proyectos
+    extension: md
+    format: frontmatter
+    create: true
+    identifier_field: nombre
+    slug: "{{slug}}"
+    summary: "{{nombre}} · {{estado}} · {{inicio}}–{{fin}}"
+    fields:
+      - { name: nombre, label: "Nombre", widget: string, required: true }
+      - { name: resumen, label: "Resumen", widget: text, required: true, hint: "Objetivo y resultado esperado en una o dos oraciones." }
+      - { name: estado, label: "Estado", widget: select, required: true, options: ["En curso", "Finalizado"] }
+      - { name: tipo, label: "Tipo", widget: string, required: true, hint: "Proyecto de investigación, Contrato de transferencia…" }
+      - { name: inicio, label: "Año de inicio", widget: number, required: true, value_type: int }
+      - { name: fin, label: "Año de finalización", widget: number, required: true, value_type: int }
+      - { name: financiador, label: "Financiador", widget: string, required: false }
+      - { name: codigo, label: "Código", widget: string, required: false }
+      - { name: director, label: "Dirección", widget: relation, collection: equipo, search_fields: [nombre], display_fields: [nombre], value_field: "{{slug}}", required: false }
+      - { name: integrantes, label: "Integrantes", widget: relation, collection: equipo, search_fields: [nombre], display_fields: [nombre], value_field: "{{slug}}", multiple: true, required: false }
+      - { name: lineas, label: "Líneas", widget: relation, collection: lineas, search_fields: [nombre], display_fields: [nombre], value_field: "{{slug}}", multiple: true, required: false }
+      - { name: socios, label: "Socios", widget: list, required: false, summary: "{{fields.valor}}", field: { name: valor, label: "Socio", widget: string } }
+      - { name: orden, label: "Orden", widget: number, required: false, value_type: int }
+      - { name: body, label: "Descripción ampliada", widget: markdown, required: false }
+
+  - name: publicaciones
+    label: "Publicaciones"
+    label_singular: "publicación"
+    folder: contenido/publicaciones
+    extension: md
+    format: frontmatter
+    create: true
+    identifier_field: titulo
+    slug: "{{slug}}"
+    summary: "{{anio}} · {{titulo}}"
+    fields:
+      - { name: titulo, label: "Título", widget: string, required: true }
+      - { name: autores, label: "Autores", widget: list, required: true, summary: "{{fields.valor}}", field: { name: valor, label: "Nombre", widget: string }, hint: "Uno por renglón, en el orden de la publicación. Los que coinciden con el nombre de un integrante quedan enlazados a su ficha." }
+      - { name: anio, label: "Año", widget: number, required: true, value_type: int }
+      - { name: tipo, label: "Tipo", widget: select, required: true, options: ["Artículo en revista", "Trabajo en congreso", "Capítulo de libro", "Informe técnico", "Libro", "Tesis"] }
+      - { name: medio, label: "Revista, congreso o libro", widget: string, required: false }
+      - { name: doi, label: "DOI", widget: string, required: false, hint: "Solo el identificador: 10.1234/abcd" }
+      - { name: lineas, label: "Líneas", widget: relation, collection: lineas, search_fields: [nombre], display_fields: [nombre], value_field: "{{slug}}", multiple: true, required: false }
+      - { name: proyecto, label: "Proyecto", widget: relation, collection: proyectos, search_fields: [nombre], display_fields: [nombre], value_field: "{{slug}}", required: false }
+
+  - name: formados
+    label: "Se formaron en el grupo"
+    label_singular: "egresado"
+    description: "Tesis y trabajos finales dirigidos."
+    folder: contenido/formados
+    extension: md
+    format: frontmatter
+    create: true
+    identifier_field: nombre
+    slug: "{{slug}}"
+    summary: "{{anio}} · {{nombre}} · {{nivel}}"
+    fields:
+      - { name: nombre, label: "Nombre y apellido", widget: string, required: true }
+      - { name: trabajo, label: "Título del trabajo", widget: string, required: true }
+      - { name: nivel, label: "Nivel", widget: select, required: true, options: ["Proyecto Integrador", "Práctica Supervisada", "Maestría", "Doctorado"] }
+      - { name: anio, label: "Año", widget: number, required: true, value_type: int }
+      - { name: direccion, label: "Dirección", widget: relation, collection: equipo, search_fields: [nombre], display_fields: [nombre], value_field: "{{slug}}", required: false }
+      - { name: hoy, label: "Dónde está hoy", widget: string, required: false }
+
+  - name: temas
+    label: "Temas para estudiantes"
+    label_singular: "tema"
+    folder: contenido/temas
+    extension: md
+    format: frontmatter
+    create: true
+    identifier_field: titulo
+    slug: "{{slug}}"
+    summary: "{{titulo}} · {{tipo}} · {{estado}}"
+    fields:
+      - { name: titulo, label: "Título", widget: string, required: true }
+      - { name: descripcion, label: "Descripción", widget: text, required: true }
+      - { name: tipo, label: "Tipo de trabajo", widget: select, required: true, options: ["Proyecto Integrador", "Práctica Supervisada", "Maestría", "Doctorado"] }
+      - { name: dirige, label: "Dirige", widget: relation, collection: equipo, search_fields: [nombre], display_fields: [nombre], value_field: "{{slug}}", required: false }
+      - { name: linea, label: "Línea", widget: relation, collection: lineas, search_fields: [nombre], display_fields: [nombre], value_field: "{{slug}}", required: false }
+      - { name: alta, label: "Fecha de alta", widget: datetime, required: true, date_format: "YYYY-MM-DD", time_format: false, picker_utc: true }
+      - { name: estado, label: "Estado", widget: select, required: true, options: ["Disponible", "En curso"] }
+
+  - name: convocatorias
+    label: "Convocatorias"
+    label_singular: "convocatoria"
+    folder: contenido/convocatorias
+    extension: md
+    format: frontmatter
+    create: true
+    identifier_field: titulo
+    slug: "{{slug}}"
+    summary: "{{titulo}} · cierra {{cierre}}"
+    fields:
+      - { name: titulo, label: "Título", widget: string, required: true }
+      - { name: tipo, label: "Tipo", widget: string, required: true, hint: "Beca doctoral, Ayudantía, Práctica Supervisada…" }
+      - { name: descripcion, label: "Descripción", widget: text, required: true }
+      - { name: cierre, label: "Fecha de cierre", widget: datetime, required: true, date_format: "YYYY-MM-DD", time_format: false, picker_utc: true, hint: "Pasada esta fecha la convocatoria deja de mostrarse." }
+      - { name: consultas, label: "Consultas a", widget: relation, collection: equipo, search_fields: [nombre], display_fields: [nombre], value_field: "{{slug}}", required: false }
+
+  - name: materias
+    label: "Materias"
+    label_singular: "materia"
+    folder: contenido/materias
+    extension: md
+    format: frontmatter
+    create: true
+    identifier_field: nombre
+    slug: "{{slug}}"
+    summary: "{{nombre}} · {{carrera}}"
+    fields:
+      - { name: nombre, label: "Nombre", widget: string, required: true }
+      - { name: carrera, label: "Carrera", widget: string, required: true }
+      - { name: tipo, label: "Tipo", widget: select, required: true, options: ["Obligatoria", "Electiva", "Posgrado"] }
+      - { name: periodo, label: "Período", widget: string, required: true, hint: "1.er cuatrimestre, 2.º cuatrimestre, Anual" }
+      - { name: responsable, label: "Responsable", widget: relation, collection: equipo, search_fields: [nombre], display_fields: [nombre], value_field: "{{slug}}", required: false }
+
+  - name: servicios
+    label: "Servicios"
+    label_singular: "servicio"
+    folder: contenido/servicios
+    extension: md
+    format: frontmatter
+    create: true
+    identifier_field: nombre
+    slug: "{{slug}}"
+    fields:
+      - { name: nombre, label: "Nombre", widget: string, required: true }
+      - { name: descripcion, label: "Descripción", widget: text, required: true }
+      - { name: linea, label: "Línea", widget: relation, collection: lineas, search_fields: [nombre], display_fields: [nombre], value_field: "{{slug}}", required: false }
+
+  - name: capacitaciones
+    label: "Capacitaciones"
+    label_singular: "capacitación"
+    folder: contenido/capacitaciones
+    extension: md
+    format: frontmatter
+    create: true
+    identifier_field: nombre
+    slug: "{{slug}}"
+    fields:
+      - { name: nombre, label: "Nombre", widget: string, required: true }
+      - { name: descripcion, label: "Para quién y qué se aprende", widget: text, required: true }
+      - { name: duracion, label: "Duración", widget: string, required: true, hint: "Por ejemplo: 16 horas" }
+      - { name: modalidad, label: "Modalidad", widget: string, required: true, hint: "En la empresa, En la Facultad, A distancia" }
+
+  - name: equipamiento
+    label: "Equipamiento"
+    label_singular: "equipo"
+    folder: contenido/equipamiento
+    extension: md
+    format: frontmatter
+    create: true
+    identifier_field: nombre
+    slug: "{{slug}}"
+    fields:
+      - { name: nombre, label: "Nombre", widget: string, required: true }
+      - { name: descripcion, label: "Para qué sirve", widget: text, required: true }
+      - { name: proveedor, label: "Proveedor", widget: string, required: false }
+      - { name: linea, label: "Línea", widget: relation, collection: lineas, search_fields: [nombre], display_fields: [nombre], value_field: "{{slug}}", required: false }
+
+  - name: casos
+    label: "Casos realizados"
+    label_singular: "caso"
+    folder: contenido/casos
+    extension: md
+    format: frontmatter
+    create: true
+    identifier_field: nombre
+    slug: "{{slug}}"
+    summary: "{{nombre}} · {{socio}} · {{anio}}"
+    fields:
+      - { name: nombre, label: "Nombre", widget: string, required: true }
+      - { name: socio, label: "Organización", widget: string, required: true }
+      - { name: anio, label: "Año", widget: number, required: true, value_type: int }
+      - { name: descripcion, label: "Descripción", widget: text, required: true }
+      - { name: servicio, label: "Servicio relacionado", widget: relation, collection: servicios, search_fields: [nombre], display_fields: [nombre], value_field: "{{slug}}", required: false }
+
+  - name: hitos
+    label: "Historia: hitos"
+    label_singular: "hito"
+    folder: contenido/hitos
+    extension: md
+    format: frontmatter
+    create: true
+    identifier_field: titulo
+    slug: "{{slug}}"
+    summary: "{{anio}} · {{titulo}}"
+    fields:
+      - { name: titulo, label: "Título", widget: string, required: true }
+      - { name: anio, label: "Año", widget: number, required: true, value_type: int }
+      - { name: descripcion, label: "Descripción", widget: text, required: true }
+
+  - name: convenios
+    label: "Historia: convenios"
+    label_singular: "convenio"
+    folder: contenido/convenios
+    extension: md
+    format: frontmatter
+    create: true
+    identifier_field: nombre
+    slug: "{{slug}}"
+    summary: "{{anio}} · {{nombre}} · {{socio}}"
+    fields:
+      - { name: nombre, label: "Nombre", widget: string, required: true }
+      - { name: socio, label: "Socio", widget: string, required: true }
+      - { name: anio, label: "Año de firma", widget: number, required: true, value_type: int }
+      - { name: tipo, label: "Tipo", widget: string, required: true, hint: "Académico nacional, Organismo público, Proveedor de tecnología…" }
+      - { name: pais, label: "País", widget: string, required: true }
+
+  - name: general
+    label: "Datos del grupo"
+    files:
+      - name: sitio
+        label: "Datos del grupo"
+        file: contenido/sitio.yml
+        fields:
+          - { name: nombre, label: "Nombre del grupo", widget: string, required: true }
+          - { name: sigla, label: "Sigla", widget: string, required: true }
+          - { name: desde, label: "Activo desde (año)", widget: number, required: true, value_type: int }
+          - { name: url, label: "Dirección del sitio", widget: string, required: true, hint: "Con https:// y barra al final." }
+          - { name: titulo_buscadores, label: "Título para buscadores", widget: string, required: true }
+          - { name: descripcion_buscadores, label: "Descripción para buscadores", widget: text, required: true }
+          - { name: descripcion, label: "Descripción corta del grupo", widget: text, required: true }
+          - { name: presentacion, label: "Presentación de la portada", widget: text, required: true }
+          - { name: departamento, label: "Departamento", widget: string, required: true }
+          - { name: facultad, label: "Facultad", widget: string, required: true }
+          - { name: facultad_sigla, label: "Sigla de la Facultad", widget: string, required: true }
+          - { name: universidad, label: "Universidad", widget: string, required: true }
+          - { name: universidad_sigla, label: "Sigla de la Universidad", widget: string, required: true }
+          - { name: universidad_url, label: "Sitio de la Universidad", widget: string, required: true }
+          - { name: ficha_oficial, label: "Ficha oficial del grupo (enlace)", widget: string, required: true }
+          - { name: correo, label: "Correo del grupo", widget: string, required: true }
+          - { name: telefono, label: "Teléfono", widget: string, required: false }
+          - { name: telefono_nota, label: "Nota junto al teléfono", widget: string, required: false }
+          - { name: edificio, label: "Edificio", widget: string, required: false }
+          - { name: calle, label: "Calle y número", widget: string, required: true }
+          - { name: codigo_postal, label: "Código postal", widget: string, required: true }
+          - { name: localidad, label: "Localidad", widget: string, required: true }
+          - { name: pais, label: "País", widget: string, required: true }
+          - { name: pais_codigo, label: "Código de país", widget: string, required: true, hint: "Dos letras: AR" }
+          - { name: pie_nota, label: "Nota al pie", widget: string, required: false }
+
+  - name: paginas
+    label: "Textos de las secciones"
+    files:
+      - name: grupo
+        label: "El grupo"
+        file: contenido/paginas/grupo.yml
+        fields:
+          - { name: titulo, label: "Título", widget: string, required: true }
+          - { name: bajada, label: "Bajada", widget: text, required: true }
+          - { name: mision, label: "Misión", widget: text, required: true }
+          - { name: vision, label: "Visión", widget: text, required: true }
+          - { name: objetivos, label: "Objetivos", widget: list, summary: "{{fields.valor}}", field: { name: valor, label: "Objetivo", widget: text } }
+          - { name: colegios, label: "Actividades para colegios", widget: list, summary: "{{fields.titulo}}", fields: [ { name: titulo, label: "Título", widget: string }, { name: texto, label: "Texto", widget: text } ] }
+      - name: investigacion
+        label: "Investigación"
+        file: contenido/paginas/investigacion.yml
+        fields:
+          - { name: titulo, label: "Título", widget: string, required: true }
+          - { name: bajada, label: "Bajada", widget: text, required: true }
+      - name: equipo
+        label: "Equipo"
+        file: contenido/paginas/equipo.yml
+        fields:
+          - { name: titulo, label: "Título", widget: string, required: true }
+          - { name: bajada, label: "Bajada", widget: text, required: true }
+      - name: estudiantes
+        label: "Estudiantes"
+        file: contenido/paginas/estudiantes.yml
+        fields:
+          - { name: titulo, label: "Título", widget: string, required: true }
+          - { name: bajada, label: "Bajada", widget: text, required: true }
+          - { name: pasos, label: "Pasos", widget: list, summary: "{{fields.titulo}}", fields: [ { name: titulo, label: "Título", widget: string }, { name: texto, label: "Texto", widget: text } ] }
+          - { name: preguntas, label: "Preguntas frecuentes", widget: list, summary: "{{fields.pregunta}}", fields: [ { name: pregunta, label: "Pregunta", widget: string }, { name: respuesta, label: "Respuesta", widget: text } ] }
+          - { name: cierre_titulo, label: "Llamado final: título", widget: string, required: true }
+          - { name: cierre_texto, label: "Llamado final: texto", widget: text, required: true }
+      - name: empresas
+        label: "Empresas"
+        file: contenido/paginas/empresas.yml
+        fields:
+          - { name: titulo, label: "Título", widget: string, required: true }
+          - { name: bajada, label: "Bajada", widget: text, required: true }
+          - { name: pasos, label: "Pasos", widget: list, summary: "{{fields.titulo}}", fields: [ { name: titulo, label: "Título", widget: string }, { name: texto, label: "Texto", widget: text } ] }
+          - { name: modalidades, label: "Modalidades de contratación", widget: list, summary: "{{fields.nombre}}", fields: [ { name: nombre, label: "Modalidad", widget: string }, { name: cuando, label: "Cuándo conviene", widget: text }, { name: firma, label: "Qué se firma", widget: string } ] }
+          - { name: patrocinio, label: "Patrocinio", widget: text, required: false }
+          - { name: preguntas, label: "Preguntas frecuentes", widget: list, summary: "{{fields.pregunta}}", fields: [ { name: pregunta, label: "Pregunta", widget: string }, { name: respuesta, label: "Respuesta", widget: text } ] }
+          - { name: cierre_titulo, label: "Llamado final: título", widget: string, required: true }
+          - { name: cierre_texto, label: "Llamado final: texto", widget: text, required: true }
+      - name: noticias
+        label: "Noticias"
+        file: contenido/paginas/noticias.yml
+        fields:
+          - { name: titulo, label: "Título", widget: string, required: true }
+          - { name: bajada, label: "Bajada", widget: text, required: true }
+      - name: contacto
+        label: "Contacto"
+        file: contenido/paginas/contacto.yml
+        fields:
+          - { name: titulo, label: "Título", widget: string, required: true }
+          - { name: bajada, label: "Bajada", widget: text, required: true }
+          - name: destinatarios
+            label: "Destinatarios"
+            widget: list
+            summary: "{{fields.publico}}"
+            fields:
+              - { name: publico, label: "Para quién", widget: string }
+              - { name: asunto, label: "Asunto", widget: string }
+              - { name: persona, label: "Persona", widget: relation, collection: equipo, search_fields: [nombre], display_fields: [nombre], value_field: "{{slug}}", required: false, hint: "Si se deja vacío se muestra el correo del grupo." }
+              - { name: correo, label: "Otro correo", widget: string, required: false, hint: "Solo si no es el de la persona ni el del grupo." }
+          - { name: motivos, label: "Motivos del formulario", widget: list, summary: "{{fields.valor}}", field: { name: valor, label: "Motivo", widget: string } }
