@@ -20,6 +20,8 @@ El sitio se genera con [Eleventy](https://www.11ty.dev/): el **contenido** está
 | `src/admin/` | Administrador de contenido (Decap CMS). |
 | `functions/api/` | Inicio de sesión del administrador con GitHub. |
 | `worker/index.js`, `wrangler.jsonc` | Worker de Cloudflare que publica el sitio y expone el inicio de sesión. |
+| `src/_includes/logo.njk` | Logo GRSI de la cabecera (SVG). |
+| `public/favicon.svg`, `favicon.ico`, `apple-touch-icon.png` | Ícono de la pestaña: la G del logo. |
 | `public/` | Archivos que se publican tal cual: `_headers` de Cloudflare e imágenes en `public/img/`. |
 | `_site/` | Sitio generado. No se sube al repositorio. |
 

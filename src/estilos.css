@@ -302,3 +302,6 @@ img.thumb{width:100%;object-fit:cover;display:block}
 .nimg,.pimg{display:block;width:100%;max-width:420px;aspect-ratio:16/9;object-fit:cover;border-radius:var(--r);border:1px solid var(--line);margin-top:6px}
 .pimg{max-width:560px;margin-top:0}
 .prose img,.pd p img{height:auto;border-radius:var(--r)}
+
+/* logo del grupo en la cabecera */
+.brand .logo{height:30px;width:auto;display:block;flex:none}
