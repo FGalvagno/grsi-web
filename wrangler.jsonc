@@ -1,0 +1,15 @@
+// Configuración del Worker de Cloudflare que publica el sitio.
+{
+  "name": "grsi-web",
+  "main": "worker/index.js",
+  "compatibility_date": "2026-11-01",
+  // Sitio generado por `npm run build`
+  "assets": {
+    "directory": "./_site",
+    "binding": "ASSETS",
+    // El inicio de sesión del administrador lo atiende el Worker
+    "run_worker_first": ["/api/*"]
+  },
+  // No borrar al desplegar las variables cargadas desde el panel de Cloudflare
+  "keep_vars": true
+}

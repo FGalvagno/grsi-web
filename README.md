@@ -18,7 +18,8 @@ El sitio se genera con [Eleventy](https://www.11ty.dev/): el **contenido** está
 | `src/_data/grsi.js` | Lee `contenido/` y arma relaciones, números, buscador y datos estructurados. |
 | `src/estilos.css`, `src/sitio.js` | Estilos y comportamiento (menú, buscador, filtros). |
 | `src/admin/` | Administrador de contenido (Decap CMS). |
-| `functions/` | Funciones de Cloudflare Pages para el inicio de sesión del administrador. |
+| `functions/api/` | Inicio de sesión del administrador con GitHub. |
+| `worker/index.js`, `wrangler.jsonc` | Worker de Cloudflare que publica el sitio y expone el inicio de sesión. |
 | `public/` | Archivos que se publican tal cual: `_headers` de Cloudflare e imágenes en `public/img/`. |
 | `_site/` | Sitio generado. No se sube al repositorio. |
 
@@ -32,18 +33,21 @@ npm run dev      # sitio en http://localhost:8080, se actualiza al guardar
 npm run build    # genera el sitio en _site/
 ```
 
-## Publicar en Cloudflare Pages
+## Publicar en Cloudflare
 
-En **Workers & Pages → Create → Pages → Connect to Git**, elegir `FGalvagno/grsi-web` y configurar:
+El sitio se publica como un **Worker con archivos estáticos**: `wrangler.jsonc` indica que los archivos salen de `_site/` y que `worker/index.js` atiende el inicio de sesión del administrador.
+
+En el proyecto de Cloudflare (Workers & Pages → `grsi-web` → Settings → Build):
 
 | Campo | Valor |
 | --- | --- |
-| Framework preset | `None` (o `Eleventy`) |
 | Build command | `npm run build` |
-| Build output directory | `_site` |
+| Deploy command | `npx wrangler deploy` |
 | Production branch | `main` |
 
 Cada `git push` vuelve a generar y publicar el sitio. Las convocatorias vencidas y la tabla "en números" se calculan al generar, así que conviene regenerar cada tanto aunque no haya cambios.
+
+El campo `name` de `wrangler.jsonc` tiene que coincidir con el nombre del Worker en Cloudflare.
 
 ## Contenido
 
@@ -92,18 +96,18 @@ El administrador está en `/admin/`. Cada cambio que se guarda ahí es un commit
 | --- | --- |
 | `src/admin/index.html` | Página que carga Decap. |
 | `src/admin/config.yml` | Qué se puede editar: una colección por cada carpeta de `contenido/`. |
-| `functions/api/auth.js`, `functions/api/callback.js` | Inicio de sesión con GitHub. Cloudflare Pages las publica en `/api/auth` y `/api/callback`. |
+| `functions/api/auth.js`, `functions/api/callback.js` | Inicio de sesión con GitHub. El Worker las expone en `/api/auth` y `/api/callback`. |
 
 ### Configuración (una sola vez)
 
 1. **Crear una OAuth App en GitHub**: Settings → Developer settings → OAuth Apps → New OAuth App.
-   - Homepage URL: la dirección del sitio (por ejemplo `https://grsi-web.pages.dev`).
+   - Homepage URL: la dirección del sitio (`https://grsi-web.galvagnofacundo.workers.dev`).
    - Authorization callback URL: la misma dirección seguida de `/api/callback`.
    - Copiar el **Client ID** y generar un **Client secret**.
-2. **Cargar las credenciales en Cloudflare Pages**: proyecto → Settings → Variables and Secrets, en Production:
+2. **Cargar las credenciales en Cloudflare**: Worker `grsi-web` → Settings → Variables and Secrets, las dos de tipo Secret:
    - `GITHUB_CLIENT_ID`
-   - `GITHUB_CLIENT_SECRET` (como secreto)
-3. **Volver a desplegar** para que las funciones tomen las variables.
+   - `GITHUB_CLIENT_SECRET`
+3. **Volver a desplegar** si Cloudflare no lo hace solo al guardar.
 4. Entrar a `/admin/` e iniciar sesión con GitHub.
 
 Puede editar quien tenga permiso de escritura en el repositorio (Settings → Collaborators). Si el sitio cambia de dominio, hay que actualizar las dos direcciones de la OAuth App.
