@@ -3,7 +3,8 @@
   "name": "grsi-web",
   "main": "worker/index.js",
   "compatibility_date": "2026-11-01",
-  // Sitio generado por `npm run build`
+  // Antes de desplegar, genera el sitio en _site
+  "build": { "command": "npm run build" },
   "assets": {
     "directory": "./_site",
     "binding": "ASSETS",

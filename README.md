@@ -41,7 +41,7 @@ En el proyecto de Cloudflare (Workers & Pages → `grsi-web` → Settings → Bu
 
 | Campo | Valor |
 | --- | --- |
-| Build command | `npm run build` |
+| Build command | vacío (el sitio se genera solo al desplegar) |
 | Deploy command | `npx wrangler deploy` |
 | Production branch | `main` |
 

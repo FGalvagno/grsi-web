@@ -1,6 +1,7 @@
 # Dependencias y sitio generado (se crean con npm install y npm run build)
 node_modules/
 _site/
+.wrangler/
 
 # Sistema operativo y editores
 .DS_Store
